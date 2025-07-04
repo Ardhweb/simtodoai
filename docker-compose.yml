@@ -1,0 +1,15 @@
+version: '3.13'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"   # Django
+      - "3000:3000"   # Next.js
+    volumes:
+      - ./backends:/app/backends
+      - ./frontends:/app/frontends
+    environment:
+      - DJANGO_SETTINGS_MODULE=backends.settings
+    stdin_open: true
+    tty: true
