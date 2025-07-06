@@ -13,9 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from decouple import config
-print(config('TEST'))
+import dj_database_url
 
-# SECRET_KEY = config('SECRET_KEY')
+db_url = dj_database_url.parse(config('DATABASE_CONN_URI'))
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,6 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'drf_yasg',
+    'core',
+    'task',
 ]
 
 MIDDLEWARE = [
@@ -77,9 +82,17 @@ WSGI_APPLICATION = 'backends.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': db_url['ENGINE'],         # e.g. django.db.backends.postgresql
+        'NAME': db_url['NAME'],             # e.g. mydatabase
+        'USER': db_url['USER'],             # e.g. myuser
+        'PASSWORD': db_url['PASSWORD'],     # e.g. mypassword
+        'HOST': db_url['HOST'],             # e.g. localhost
+        'PORT': db_url['PORT'],             # e.g. 5432
     }
 }
 
@@ -124,3 +137,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#DRF Global Authentication and Authorization Config.
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
