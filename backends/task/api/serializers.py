@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from task.models import Task,Tag, Category
+from task.models import Task,Tag, Category,ContextEntry
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,3 +15,8 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = '__all__'
+
+class ContextSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContextEntry
+        fields = "__all__"
